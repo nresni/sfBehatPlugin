@@ -62,6 +62,8 @@ h1:before {
     color:#fff;
     background:#382817;
     border-radius: 20px 0px 0px 20px;
+    -moz-border-radius: 20px 0px 0px 20px;
+    -webkit-border-radius: 20px 0px 0px 20px;
 }
 
 h1:after {
@@ -79,6 +81,8 @@ h1:after {
     font-weight:bold;
     color:#fff;
     background:#382817;
+    -webkit-border-radius: 0px 20px 20px 0px;
+    -moz-border-radius: 0px 20px 20px 0px;
     border-radius: 0px 20px 20px 0px;
 }
 
@@ -138,6 +142,8 @@ h2 {
 .definition .syntax pre {
     margin-left:40px !important;
     border-radius:15px 0px 0px 15px;
+    -moz-border-radius:15px 0px 0px 15px;
+    -webkit-border-radius:15px 0px 0px 15px;
 }
 .syntax, .definition h3 {
     font-family: 'Bitstream Vera Sans Mono', 'DejaVu Sans Mono', Monaco, Courier, monospace !important;
@@ -162,6 +168,8 @@ p.intro {
     padding-left:25px;
     padding-right:15px;
     border-radius:0px 0px 20px 20px;
+    -moz-border-radius:0px 0px 20px 20px;
+    -webkit-border-radius:0px 0px 20px 20px;
     font-size:1.2em;
     line-height:1.0em;
     font-style:italic;

@@ -1,77 +1,674 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 
-	<title>everzet/sfBehatPlugin @ GitHub</title>
-	
-	<style type="text/css">
-		body {
-  		margin-top: 1.0em;
-  		background-color: #5a1c1c;
-		  font-family: "Helvetica,Arial,FreeSans";
-  		color: #ffffff;
-    }
-    #container {
-      margin: 0 auto;
-      width: 700px;
-    }
-		h1 { font-size: 3.8em; color: #a5e3e3; margin-bottom: 3px; }
-		h1 .small { font-size: 0.4em; }
-		h1 a { text-decoration: none }
-		h2 { font-size: 1.5em; color: #a5e3e3; }
-    h3 { text-align: center; color: #a5e3e3; }
-    a { color: #a5e3e3; }
-    .description { font-size: 1.2em; margin-bottom: 30px; margin-top: 30px; font-style: italic;}
-    .download { float: right; }
-		pre { background: #000; color: #fff; padding: 15px;}
-    hr { border: 0; width: 80%; border-bottom: 1px solid #aaa}
-    .footer { text-align:center; padding-top:30px; font-style: italic; }
-	</style>
-	
+  <title>sfBehatPlugin - BDD in symfony</title>
+
+  <link href='http://fonts.googleapis.com/css?family=Lobster' rel='stylesheet' type='text/css'/> 
+  <link href='http://fonts.googleapis.com/css?family=Droid+Serif' rel='stylesheet' type='text/css'/> 
+  <link href='http://fonts.googleapis.com/css?family=Neuton' rel='stylesheet' type='text/css'/> 
+  <link rel="stylesheet" type="text/css" href="css/style.css" media="all"/>
+  <link rel="stylesheet" type="text/css" href="css/pygments.css" media="all"/>
+
+  <script type="text/javascript" src="js/jquery-1.4.2.min.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function() {
+      var activeH = $('#fixed');
+      var menu = $('#menu');
+      var headers = $('h2:not(#fixed)');
+
+      $(window).scroll(function() {
+          var winScrollTop = $(this).scrollTop();
+
+          if (winScrollTop >= 186) {
+              menu.css({position: 'fixed', top: 0, opacity: 0.9})
+          } else {
+              menu.css({position: 'absolute', top: 186, opacity: 1.0})
+          }
+
+          headers.css({opacity:1});
+
+          headers.each(function() {
+              var h = $(this);
+
+              if (winScrollTop > headers.eq(0).offset().top) {
+                  if (winScrollTop > (h.offset().top - 1)) {
+                      activeH.css({display:'block'});
+                      activeH.text(h.text());
+                      h.css({opacity:0});
+                  }
+              } else {
+                  activeH.css({display:'none'});
+              }
+          });
+      });
+
+    });
+  </script>
 </head>
 
 <body>
-  <a href="http://github.com/everzet/sfBehatPlugin"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
+  <a class="fork" href="http://github.com/everzet/Behat"><img style="position: absolute; top: 0; right: 0; border: 0;" src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub" /></a>
 
   <div id="container">
 
-    <div class="download">
-      <a href="http://github.com/everzet/sfBehatPlugin/zipball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/zip.png"></a>
-      <a href="http://github.com/everzet/sfBehatPlugin/tarball/master">
-        <img border="0" width="90" src="http://github.com/images/modules/download/tar.png"></a>
-    </div>
+    <h1>
+      <a href="http://everzet.com/Behat">Behat</a>
+    </h1>
 
-    <h1><a href="http://github.com/everzet/sfBehatPlugin">sfBehatPlugin</a>
-      <span class="small">by <a href="http://github.com/everzet">everzet</a></span></h1>
+    <ul id="menu">
+      <li><a href="#install">install</a></li>
+      <li><a href="#basics">basics</a></li>
+      <li><a href="#browser">browser</a></li>
+      <li><a href="#response">response</a></li>
+      <li><a href="#forms">forms</a></li>
+      <li><a href="#other">other</a></li>
+    </ul>
 
-    <div class="description">
-      BDD in symfony by Behat
-    </div>
+    <h2 id="fixed"></h2>
 
-    <h2>Authors</h2>
-<p>ever.zet (ever.zet@gmail.com)<br/><br/>      </p>
-<h2>Contact</h2>
-<p>Kudryashov Konstantin (ever.zet@gmail.com)<br/>      </p>
+    <p class="intro">
+      <span class="bdd">Behavior driven development</span> for <span class="symfony">symfony</span>
+    </p>
 
-
-    <h2>Download</h2>
+    <h2 id="install">Install</h2>
     <p>
-      You can download this project in either
-      <a href="http://github.com/everzet/sfBehatPlugin/zipball/master">zip</a> or
-      <a href="http://github.com/everzet/sfBehatPlugin/tarball/master">tar</a> formats.
+      There's many ways to install sfBehatPlugin to your system, but first, you need to install <a href="http://everzet.com/Behat">Behat</a> itself to run features and <a href="http://github.com/sebastianbergmann/phpunit/tree/3.5.0RC2">latest PHPUnit</a> (it's used by sfBehatPlugin built-in step definitions). If you have - continue reading, if not - install them first.
     </p>
-    <p>You can also clone the project with <a href="http://git-scm.com">Git</a>
-      by running:
-      <pre>$ git clone git://github.com/everzet/sfBehatPlugin</pre>
+    <p>
+      You can install sfBehatPlugin in either
+      <a href="http://github.com/everzet/Behat/zipball/master">zip</a> or
+      <a href="http://github.com/everzet/Behat/tarball/master">tar</a> formats.
+    </p>
+    <p>
+      You can also clone the plugin with <a href="http://git-scm.com">Git</a> by running:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="nv">$ </span>git clone git://github.com/everzet/sfBehatPlugin.git plugins/sfBehatPlugin
+</pre></div> 
+</div>
+    <p>
+        from symfony project root.
+    </p>
+    <p>
+        After plugin installation into <code>plugins/sfBehatPlugin</code> add plugin into <code>config/ProjectConfiguration.class.php</code> init routine and run:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="nv">$ </span>symfony behat:init frontend
+</pre></div> 
+</div>
+    <p>
+        This will create necessary folders structures and <code>behat.yml</code> config in project root.
     </p>
 
-    <div class="footer">
-      get the source code on GitHub : <a href="http://github.com/everzet/sfBehatPlugin">everzet/sfBehatPlugin</a>
-    </div>
+    <h2 id="basics">Basics</h2>
+    <p>
+        After plugin installation and <code>symfony behat:init</code> run, you will have new folder under <code>test/features</code> with structure like:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre>
+|-- frontend
+|  |-- auth.feature
+|  `-- support
+|      |-- env.php
+|      |-- paths.php
+`-- backend
+  `-- steps
+  |   `-- custom_steps.php
+  `-- support
+      |-- env.php
+      |-- paths.php
+</pre></div>
+</div>
+    <ol>
+        <li>First level in structure is app name (<code>frontend</code>, <code>backend</code>)</li>
+        <li>Features itself are placed in second level (<code>auth.feature</code>)</li>
+        <li>Custom step definitions are placed in <code>steps</code> folders</li>
+        <li><code>support</code> folder holds configuration scripts (read <a href="http://everzet.com/Behat/#env">Behat documentation</a> for more info)</li>
+        <li><code>support/paths.php</code> holds paths (routes) definitions for browsing steps.</li>
+    </ol>
+    <p>
+        Now, lets create our first feature. sfBehatPlugin has handy task to create basic feature skelet for you:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="nv">$ </span>symfony behat:generate-feature frontend main
+</pre></div> 
+</div>
+    <p>
+        Now look into <code>test/features/frontend/main.feature</code> and run it with Behat:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="nv">$ </span>behat test/features/frontend/auth.feature
+</pre></div> 
+</div>
+    <p>
+        Or run all your frontend features with just:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="nv">$ </span>behat
+</pre></div> 
+</div>
+    <p>
+        Behat will run frontend features by default. This can be configured in <code>behat.yml</code>.
+    </p>
+    <p>
+        sfBehatPlugin has bunch of predefined step definitions for symfony. Next chapters describing almost all of them.
+    </p>
+
+
+    <h2 id="browser">Browser</h2>
+    <p>
+        Here are list of predefined in sfBehatPlugin browser <code>$steps-></code>:
+    </p>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Given</span>(
+        '<span class="regexp">/^I am on(?: the)? (.*)$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$page</span>) {
+    </h3>
+    <p>
+        This step moves browser emulator to another specified page. Page can have relative path (<code>/users</code>) or text definition (<code>users page</code>), but in this case, you need to specify it in <code>support/paths.php</code>.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Given </span>I am on homepage
+<span class="k">And </span>I am on the /users
+<span class="k">And </span>I am on the users page
+<span class="k">And </span>I am on everzet user page
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I go to(?: the)? (.*)$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$page</span>) {
+    </h3>
+    <p>
+        This step moves browser emulator to another specified page. Page can have relative path (<code>/users</code>) or text definition (<code>users page</code>), but in this case, you need to specify it in <code>support/paths.php</code>.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I go to homepage
+<span class="k">And </span>I go to the /users
+<span class="k">And </span>I go to the users page
+<span class="k">And </span>I go to everzet user page
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I (?:follow|click)(?: the)? "([^"]*)"(?: link)*$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$link</span>) {
+    </h3>
+    <p>
+        This step tells browser emulator to click specified link on current page.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I follow "Homepage" link
+<span class="k">And </span>I click "Users"
+<span class="k">And </span>I follow the "Users" link
+<span class="k">And </span>I click the "Profile" link
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I go back$/</span>' ,
+        function(<span class="argument">$world</span>) {
+    </h3>
+    <p>
+        This step tells browser to move one page backward.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I go back
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I go forward$/</span>' ,
+        function(<span class="argument">$world</span>) {
+    </h3>
+    <p>
+        This step tells browser to move one page forward.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I go forward
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I send post to (.*) with:$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$page</span>, <span class="argument">$table</span>) {
+    </h3>
+    <p>
+        This step tells browser to send request with <code>POST</code> method and specified in table data. <code>$table</code> argument is a Gherkin table, that follows step. Table will be converted into associative array before send.
+    </p>
+    <p>
+        Page can have relative path (<code>/users</code>) or text definition (<code>users page</code>), but in this case, you need to specify it in <code>support/paths.php</code>.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I send post to /users with:
+  | nickname | password | remove |
+  | everzet  | qwerty   | 0      |
+  | fabien   | 12345    | 0      |
+  | root     | $asd2    | 1      |
+<span class="k">And </span>I send post to homepage with:
+  | nickname | password |
+  | everzet  | qwerty   |
+  | fabien   | 12345    |
+</pre></div>
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I follow redirect$/</span>' ,
+        function(<span class="argument">$world</span>) {
+    </h3>
+    <p>
+        This step tells browser to follow redirect.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>I follow redirect
+</pre></div> 
+</div>
+</div>
+
+
+
+
+
+<h2 id="response">Response</h2>
+<p>Response <code>$steps-></code>:</p>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^Response status code is (\d+)$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$code</span>) {
+    </h3>
+    <p>
+        Checks whether response status code is equal to specified one.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>Response status code is 200
+<span class="k">And </span>Response status code is 404
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^I should see "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$text</span>) {
+    </h3>
+    <p>
+        Checks whether response contains specified text.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>I should see "You've entered"
+<span class="k">And </span>I should see "Welcome!"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^I should not see "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$text</span>) {
+    </h3>
+    <p>
+        Checks whether response not contains specified text.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>I should see "Error"
+<span class="k">And </span>I should see "wrong credentials"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^I should see element "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$css</span>) {
+    </h3>
+    <p>
+        Checks whether response contains element with specified CSS selector.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>I should see element "#submit"
+<span class="k">And </span>I should see element "ul.items > h3"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^Header "([^"]*)" is set to "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$key</span>, <span class="argument">$value</span>) {
+    </h3>
+    <p>
+        Checks whether response contains header with specified value.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>Header "Content-Type" is set to "text/plain"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^Header "([^"]*)" is not set to "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$key</span>, <span class="argument">$value</span>) {
+    </h3>
+    <p>
+        Checks whether response header value is not equal to specified one.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>Header "Content-Type" is not set to "text/xml"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^Cookie "([^"]*)" was set$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$key</span>) {
+    </h3>
+    <p>
+        Checks whether response cookie was set.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>Cookie "session_id" was set
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^Cookie "([^"]*)" was set to "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$key</span>, <span class="argument">$value</span>) {
+    </h3>
+    <p>
+        Checks whether response cookie was set to specified value.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>Cookie "session_id" was set to "7020e2e896ff77d22b636e3039c739f1"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^Cookie "([^"]*)" was not set to "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$key</span>, <span class="argument">$value</span>) {
+    </h3>
+    <p>
+        Checks whether response cookie was not set to specified value.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>Cookie "session_id" was not set to "everzet"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^I was redirected$/</span>' ,
+        function(<span class="argument">$world</span>) {
+    </h3>
+    <p>
+        Checks whether browser was redirected.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>I was redirected
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">Then</span>(
+        '<span class="regexp">/^I was not redirected$/</span>' ,
+        function(<span class="argument">$world</span>) {
+    </h3>
+    <p>
+        Checks whether browser was not redirected.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">Then </span>I was not redirected
+</pre></div> 
+</div>
+</div>
+
+
+
+<h2 id="forms">Forms</h2>
+<p>Form <code>$steps-></code>:</p>
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I fill in "([^"]*)" with "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$field</span>, <span class="argument">$value</span>) {
+    </h3>
+    <p>
+        Fills specified field with specified value.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I fill in "username" with "everzet"
+<span class="k">And </span>I fill in "password" with "qwerty"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I select "([^"]*)" from "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$value</span>, <span class="argument">$field</span>) {
+    </h3>
+    <p>
+        Select specified value in specified select or radiobuttons field.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I select "Belarus" from "countries"
+<span class="k">And </span>I select "man" from "sex"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I check "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$field</span>) {
+    </h3>
+    <p>
+        Cheks specified checkbox.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I check "Agree"
+<span class="k">And </span>I check "news"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I check "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$field</span>) {
+    </h3>
+    <p>
+        Uncheks specified checkbox.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I uncheck "spam"
+<span class="k">And </span>I uncheck "news"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I attach the file at "([^"]*)" to "([^"]*)"$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$path</span>, <span class="argument">$field</span>) {
+    </h3>
+    <p>
+        Attaches file at specified path to file selector. File path must be accessible by step definition, so better give absolute paths.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I attach the file at "/tmp/git.pdf" to "manual"
+</pre></div> 
+</div>
+</div>
+
+
+<div class="definition">
+    <h3>
+        <span class="type">When</span>(
+        '<span class="regexp">/^I press "([^"]*)" in (.*) form$/</span>' ,
+        function(<span class="argument">$world</span>, <span class="argument">$button</span>, <span class="argument">$form</span>) {
+    </h3>
+    <p>
+        Presses button in specified form.
+    </p>
+    <p>
+        Examples:
+    </p>
+<div class="hlcode"> 
+<div class="syntax"><pre><span class="k">When </span>I press "Submit" in register form
+<span class="k">When </span>I press "#login" in login form
+</pre></div> 
+</div>
+</div>
+
+
+<h2 id="other">Other steps</h2>
+<p>
+    This is not all. There's also mailer, user, request and cache step definitions for symfony. You can find them <a href="http://github.com/everzet/sfBehatPlugin/tree/master/features/steps/">here</a>. Definitions are mostly self-explanatory, so just read them when you ready.
+</p>
+
+
+    <span class="copyright">Developed by Konstantin Kudryashov (<a href="http://everzet.com/">everzet</a>), 2010</span>
 
   </div>
 
